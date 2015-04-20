@@ -2,7 +2,7 @@ open Core.Std
 
 let testS = [1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;];;
 
-let testS2 = [1;2;3;4;5;6;7;8;9;11;12;13;14;15;16;17;18;19;21;22;23;24;26;27;28;29;31;32;33;34;35;36;37;38;39;41;42;43;44;45;46;47;48;49;51;52;53;54;55;56;57;58;59;61;62;63;64;65;66;67;68;69;71;72;73;74;75;76;77;78;79;81;82;83;84;85;86;87;88;89];;
+let testS2 = [1;2;3;4;5;6;7;8;9;11;12;13;14;15;16;17;18;19;21;22;23;24;25;26;27;28;29;31;32;33;34;35;36;37;38;39;41;42;43;44;45;46;47;48;49;51;52;53;54;55;56;57;58;59;61;62;63;64;65;66;67;68;69;71;72;73;74;75;76;77;78;79;81;82;83;84;85;86;87;88;89];;
 
 let getRowSet table index =
   let offsetedTable = List.drop table (index * 9) in
@@ -28,16 +28,47 @@ let getZoneSet table index =
   List.drop table (transIndex index) |> getZoneSet' 3
 ;;
 
-  0
-  3
-  6
-  27 (1*27+0)
-  30 (1*27+3)
-  33 (1*27+6)
-  (2*27+0)
-  (2*27+3)
-  (2*27+6)
-  
+let compliment a b =
+  List.filter ~f:(fun x -> not (List.mem b x)) a
+;;
+
+let union a b =
+  List.filter ~f:(fun x -> (List.mem b x)) a
+;;
+
+type sType =
+  | None
+  | Fixed of int
+  | CList of int list
+;;
+
+(* let fullSet = [Fixed 1; Fixed 2; Fixed 3; Fixed 4; Fixed 5; Fixed 6; Fixed 7; Fixed 8; Fixed 9];; *)
+let fullSet = [1;2;3;4;5;6;7;8;9];;
+
+let testttt = [Fixed 3; None; CList [1;2;4]];;
+
+let rec getFixed set =
+  match set with
+  | [] -> []
+  | x::xs -> match x with
+             | Fixed v -> v :: getFixed xs
+             | _ -> getFixed xs
+;;
+
+let getMissing set =
+  getFixed set |> compliment fullSet
+;;
+
+  (* 0 *)
+  (* 3 *)
+  (* 6 *)
+  (* 27 (1*27+0) *)
+  (* 30 (1*27+3) *)
+  (* 33 (1*27+6) *)
+  (* (2*27+0) *)
+  (* (2*27+3) *)
+  (* (2*27+6) *)
+
 let test_getRowSet = getRowSet testS 7;;
 let test_getColSet = getColSet testS 7;;
 let test_getColSet = getZoneSet testS2 0;;

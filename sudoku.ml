@@ -25,8 +25,6 @@ let getZone x y table =
   Array.concat_map ~f:(getTris y) row3
 ;;
 
-
-
 let getCell x y table =
   let row = getRow x table in
   Array.get row y
