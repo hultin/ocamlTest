@@ -4,6 +4,19 @@ let testS = [1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7;8;9;1;2;3;4;5;6;7
 
 let testS2 = [1;2;3;4;5;6;7;8;9;11;12;13;14;15;16;17;18;19;21;22;23;24;25;26;27;28;29;31;32;33;34;35;36;37;38;39;41;42;43;44;45;46;47;48;49;51;52;53;54;55;56;57;58;59;61;62;63;64;65;66;67;68;69;71;72;73;74;75;76;77;78;79;81;82;83;84;85;86;87;88;89];;
 
+exception Cant_parse_string;;
+
+let firstSText = "4...3.......6..8..........1....5..9..8....6...7.2........1.27..5.3....4.9........";;
+let sStringToTable s =
+  let chat_to_sType c =
+    if Char.is_digit c then Fixed (Char.get_digit_exn c)
+    else if (c = '.') then None
+    else raise Cant_parse_string
+  in
+  String.to_list s |> List.map ~f:chat_to_sType
+;;
+let firstS = sStringToTable firstSText;;
+
 let getRowSet table index =
   let offsetedTable = List.drop table (index * 9) in
   List.take offsetedTable 9
@@ -58,6 +71,35 @@ let rec getFixed set =
 let getMissing set =
   getFixed set |> compliment fullSet
 ;;
+
+let fillMissing set =
+  let missing = CList (getMissing set) in
+  let rec fillMissing' set =
+  match set with
+  | [] -> []
+  | x::xs -> match x with
+             | Fixed v -> Fixed v :: fillMissing' xs
+             | _ -> missing :: fillMissing' xs
+  in
+  fillMissing' set
+;;
+let testSet = [Fixed 1; None; Fixed 3; Fixed 4; None; Fixed 5; Fixed 6; None; Fixed 7;];;
+let testFill = fillMissing testSet;;
+
+let fillAllMissing listOfSets =
+  List.map ~f:fillMissing listOfSets
+;;
+
+let fillAllMissingBySetType table setGetter =
+  let iRange = [0;1;2;3;4;5;6;7;8] in
+  let listOfSets = List.map ~f:(setGetter table) iRange in
+  fillAllMissing listOfSets
+;;
+
+let r = fillAllMissingBySetType firstS getRowSet;;
+let c = fillAllMissingBySetType firstS getColSet;;
+let z = fillAllMissingBySetType firstS getZoneSet;;
+  
 
   (* 0 *)
   (* 3 *)
