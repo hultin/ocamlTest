@@ -96,10 +96,26 @@ let fillAllMissingBySetType table setGetter =
   fillAllMissing listOfSets
 ;;
 
+let getAllCols table =
+  let iRange = [0;1;2;3;4;5;6;7;8] in
+  List.map ~f:(getColSet table) iRange
+;;
+let getAllZones table =
+  let iRange = [0;1;2;3;4;5;6;7;8] in
+  List.map ~f:(getZoneSet table) iRange
+;;
+let tva = testS2;;
+let tre = getAllCols testS2 |> List.concat |> getAllCols |> List.concat;;
+let fyra = getAllZones testS2 |> List.concat |> getAllZones |> List.concat;;
 let r = fillAllMissingBySetType firstS getRowSet;;
 let c = fillAllMissingBySetType firstS getColSet;;
 let z = fillAllMissingBySetType firstS getZoneSet;;
+let transformRowsToTable rows = List.concat rows;;
+let transformColsToTable cols = List.concat cols |> getAllCols |> List.concat;;
+let transformZonesToTable zones = List.concat zones |> getAllCols |> List.concat;;
 
+let allCandidates table =
+  
   (* 0 *)
   (* 3 *)
   (* 6 *)
