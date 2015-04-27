@@ -99,7 +99,6 @@ let fillAllMissingBySetType table setGetter =
 let r = fillAllMissingBySetType firstS getRowSet;;
 let c = fillAllMissingBySetType firstS getColSet;;
 let z = fillAllMissingBySetType firstS getZoneSet;;
-  
 
   (* 0 *)
   (* 3 *)
